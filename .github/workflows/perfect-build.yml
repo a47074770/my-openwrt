@@ -22,19 +22,19 @@ jobs:
 
     - name: Clone Source Code
       run: |
+        # 1. 稳妥拉取官方核心源
         git clone https://github.com -b openwrt-23.05 openwrt
         cd openwrt
+        
+        # 2. 注入极为稳定的核心依赖源
         echo "src-git istore https://github.com" >> feeds.conf.default
         echo "src-git linkease https://github.com" >> feeds.conf.default
         echo "src-git passwall_packages https://github.com" >> feeds.conf.default
         echo "src-git passwall https://github.com" >> feeds.conf.default
+        
+        # 3. 运行更新
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        cd package
-        git clone https://github.com temp_repo
-        mv temp_repo/luci-app-cloudflarespeedtest ./
-        rm -rf temp_repo
-        cd ..
 
     - name: Start Web Terminal
       uses: mxschmitt/action-tmate@v3
